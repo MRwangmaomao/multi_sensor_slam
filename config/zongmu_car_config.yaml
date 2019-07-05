@@ -1,0 +1,57 @@
+%YAML:1.0
+ 
+#support: 
+# 1 imu 
+# 2 cam:front camera, rear camera
+# 4 wheel:left_front,right_front,left_rear,right_rear
+
+# ----------------------------------------------------------
+# IMU param
+imu_topic: "/imu/data_raw" 
+# The more accurate parameters you provide, the better performance
+acc_n: 0.1          # accelerometer measurement noise standard deviation. 
+gyr_n: 0.01         # gyroscope measurement noise standard deviation.     
+acc_w: 0.001        # accelerometer bias random work noise standard deviation.  
+gyr_w: 0.0001       # gyroscope bias random work noise standard deviation.     
+g_norm: 9.81007     # gravity magnitude
+
+
+# ----------------------------------------------------------
+# wheel param
+dws_topic: "/dws_info"
+front_wheel_radius: 0.315
+rear_wheel_radius: 0.315
+wheel_base: 2.560
+front_track: 1.560
+rear_track: 1.560
+
+front_wheel_pulses: 92
+rear_wheel_pulses: 78
+
+left_front_speed_sf: 1.015065
+right_front_speed_sf: 1.014965
+left_rear_speed_sf: 1.197095
+right_rear_speed_sf: 1.193273
+
+
+# ----------------------------------------------------------
+# camera param
+num_of_cam: 2  
+image0_topic: "/front_camera/image_raw"
+image1_topic: "/rear_camera/image_raw"
+cam_calib: "cam_mei.yaml" 
+image_width: 1280
+image_height: 720 
+
+dr_T_rear_camera: !!opencv-matrix 
+        rows: 4
+        cols: 4
+        dt: d
+        data: [0.0800763,0.328345,-0.941157,-0.68805,0.996746, -0.0351053, 0.0725586, 0.0741066,-0.00921536,-0.943905,-0.330088,0,0,0,0,1]
+
+dr_T_front_camera: !!opencv-matrix 
+        rows: 4
+        cols: 4
+        dt: d
+        data: [-0.00338553,-0.426598,0.904435,3.03729,-0.999858,-0.0134855,-0.0101035,0.164733,0.0165069,-0.904341,-0.426492,0.0101045,0,0,0,1]
+ 

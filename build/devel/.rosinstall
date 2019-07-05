@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/wpr/code/catkin_ws/src/multi_sensor_slam/build/devel/setup.sh
