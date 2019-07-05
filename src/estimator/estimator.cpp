@@ -33,3 +33,8 @@ void Estimator::get_odom(float left_rear_wheel_num, float right_rear_pulses_num,
     // pubOdometry(*this, header);
     
 }
+
+void Estimator::inputImage(float time, cv::Mat image0,  cv::Mat image1)
+{
+
+}

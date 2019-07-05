@@ -23,6 +23,7 @@ public:
 	virtual ~Estimator(); 
 	void setParameter();
 	void get_odom(float left_rear_wheel_num, float right_rear_pulses_num, double current_time);
+	void inputImage(float time, cv::Mat image0,  cv::Mat image1);
     FeatureTracker featureTracker_;
 	WheelOdometer wheel_odometer_;
 };

@@ -53,9 +53,10 @@ void WheelOdometer::calculate_odom(float left_rear_wheel_num, float right_rear_p
         yaw += dtheta;
         T(0) += dx * cos(yaw); 
         T(1) += dx * sin(yaw);
-        std::cout << T << std::endl;
+        // std::cout << T << std::endl;
     } 
     last_time_ = current_time;
     last_left_rear_pulses_num_ = left_rear_wheel_num;
     last_right_rear_pulses_num_ = right_rear_pulses_num;
 }
+

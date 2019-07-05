@@ -94,7 +94,8 @@ void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
     double rz = imu_msg->angular_velocity.z;
     Vector3d acc(dx, dy, dz);
     Vector3d gyr(rx, ry, rz); 
-    return;
+    // ROS_DEBUG("imu:%lf", t);
+    // return;
 }
 
 /**
@@ -108,9 +109,9 @@ void dws_callback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
     float left_rear_pulse_num = dws_msg->left_rear; 
     float right_rear_pulse_num = dws_msg->right_rear;
     float left_front_pulse_num = dws_msg->left_front;
-    float right_front_pulse_num = dws_msg->right_front;
-    // ROS_DEBUG("left_front_pulse : %ld, right_front_pulse : %ld", left_front_pulse_num, right_front_pulse_num); 
+    float right_front_pulse_num = dws_msg->right_front;  
     estimator.get_odom(left_rear_pulse_num, right_rear_pulse_num, t);
+    // ROS_DEBUG("dws:%lf", t);
 }
 
 /**
@@ -130,7 +131,8 @@ void sync_process()
             if (!img0_buf.empty() && !img1_buf.empty())
             {
                 double time0 = img0_buf.front()->header.stamp.toSec();
-                double time1 = img1_buf.front()->header.stamp.toSec();
+                double time1 = img1_buf.front()->header.stamp.toSec(); 
+                ROS_DEBUG("img0:%lf, img1:%lf", time0, time1);
                 if(time0 < time1)
                 {
                     img0_buf.pop();
@@ -152,8 +154,8 @@ void sync_process()
                 }
             }
             m_buf.unlock();
-            // if(!image0.empty())
-            //     estimator.inputImage(time, image0, image1);
+            if(!image0.empty())
+                estimator.inputImage(time, image0, image1);
         }
         else
         {
@@ -191,7 +193,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "multi_sensor_slam");
     ros::start();
     ros::NodeHandle n("~");
-    ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
+    ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
 
     // config file
     std::string config_file = "/home/wpr/code/catkin_ws/src/multi_sensor_slam/config/zongmu_car_config.yaml";   
@@ -210,7 +212,7 @@ int main(int argc, char **argv)
     ROS_WARN("waiting for image, dws and imu...");
 
     registerPub(n);
-    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback, ros::TransportHints().tcpNoDelay()); 
+    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback); //, ros::TransportHints().tcpNoDelay()
     ros::Subscriber sub_dws = n.subscribe(DWS_TOPIC, 2000, dws_callback); 
     ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0_callback);
     ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1_callback);
