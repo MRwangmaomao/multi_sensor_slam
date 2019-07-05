@@ -22,7 +22,7 @@ public:
 	float last_left_rear_pulses_num_;
 	float last_right_rear_pulses_num_;
 	double last_time_;
-
+	
 	double yaw;
 	Eigen::Vector3d T;
 };

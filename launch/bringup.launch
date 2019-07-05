@@ -2,6 +2,11 @@
 <launch>
     <arg name="config_file" default="$(find multi_sensor_slam)/config/zongmu_car_config.yaml" />
 
+    <node pkg="rosbag" type="play" name="playimu"  args="--clock /home/wpr/code/catkin_ws/database/imu.bag"/>
+    <node pkg="rosbag" type="play" name="playedws" args="--clock /home/wpr/code/catkin_ws/database/dws.bag"/>
+    <node pkg="rosbag" type="play" name="playefront"  args="--clock /home/wpr/code/catkin_ws/database/front_0.bag"/>
+    <node pkg="rosbag" type="play" name="playerear" args="--clock /home/wpr/code/catkin_ws/database/rear_0.bag"/>
+
     <node name="multi_sensor" pkg="multi_sensor_slam" type="multi_sensor_node" output="screen" >
       <param name="config_file" value="$(arg config_file)" />
     </node> 
