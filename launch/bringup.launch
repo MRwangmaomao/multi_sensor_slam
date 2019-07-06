@@ -3,11 +3,14 @@
     <arg name="config_file" default="$(find multi_sensor_slam)/config/zongmu_car_config.yaml" />
 
 
-    <node pkg="rosbag" type="play" name="playedws" args="--clock /home/why/Documents/SLAM_dateset/ZhongMu/data/Bag/bag/image_bag/dws_.bag"/>
-    <node pkg="rosbag" type="play" name="playefront"  args="--clock /home/why/Documents/SLAM_dateset/ZhongMu/data/Bag/bag/front_camera/front_2.bag"/>
-    <node pkg="rosbag" type="play" name="playerear" args="--clock /home/why/Documents/SLAM_dateset/ZhongMu/data/Bag/bag/rear_camera/rear_2.bag"/>
-    <node pkg="rosbag" type="play" name="playimu"  args="--clock /home/why/Documents/SLAM_dateset/ZhongMu/data/Bag/bag/image_bag/imu_.bag"/>
+    <node pkg="rosbag" type="play" name="playedws" args="--clock /home/wpr/catkin_vinsmono/database/dws.bag"/>
+    <node pkg="rosbag" type="play" name="playefront"  args="--clock /home/wpr/catkin_vinsmono/database/front_0.bag"/>
+    <node pkg="rosbag" type="play" name="playerear" args="--clock /home/wpr/catkin_vinsmono/database/rear_0.bag"/>
+    <node pkg="rosbag" type="play" name="playimu"  args="--clock /home/wpr/catkin_vinsmono/database/imu.bag"/>
     <node name="multi_sensor" pkg="multi_sensor_slam" type="multi_sensor_node" output="screen" >
       <param name="config_file" value="$(arg config_file)" />
     </node> 
+    
+    <node name="rvizvisualisation" pkg="rviz" type="rviz" output="log" args="-d $(find multi_sensor_slam)/config/multi_slam_rviz.rviz" />
+
 </launch>

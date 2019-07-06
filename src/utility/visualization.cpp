@@ -5,11 +5,13 @@ using namespace Eigen;
 
 Publisher pub_odometry;
 Publisher pub_path;
+Publisher pub_image_track;
 
 void registerPub(ros::NodeHandle &n)
 {
     pub_odometry = n.advertise<nav_msgs::Odometry>("odometry", 1000);
     pub_path = n.advertise<nav_msgs::Path>("path", 1000);
+    pub_image_track = n.advertise<sensor_msgs::Image>("image_track", 1000);
 }
 
 
@@ -65,4 +67,13 @@ void pubOdometry(nav_msgs::Odometry odometry, const std_msgs::Header &header)
     //     printf("time: %f, t: %f %f %f q: %f %f %f %f \n", header.stamp.toSec(), tmp_T.x(), tmp_T.y(), tmp_T.z(),
     //                                                         tmp_Q.w(), tmp_Q.x(), tmp_Q.y(), tmp_Q.z());
     // }
+}
+
+void pubTrackImage(const cv::Mat &imgTrack, const double time)
+{
+    std_msgs::Header header;
+    header.frame_id = "world";
+    header.stamp = ros::Time(time);
+    sensor_msgs::ImagePtr imgTrackMsg = cv_bridge::CvImage(header, "bgr8", imgTrack).toImageMsg();
+    pub_image_track.publish(imgTrackMsg);
 }

@@ -3,8 +3,7 @@ project(multi_sensor_slam)
  
 set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_CXX_FLAGS "-std=c++11") 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
- 
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g") 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -15,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   nav_msgs
+  camera_model
 )
  
 find_package(OpenCV REQUIRED)
@@ -112,6 +112,7 @@ add_library(multi_sensor_lib
   include/multi_sensor_slam/wheel_odometer.h
   src/estimator/wheel_odometer.cpp
   include/multi_sensor_slam/feature_tracker.h
+  include/multi_sensor_slam/tic_toc.h
   src/feature_tracking/feature_tracker.cpp
   include/multi_sensor_slam/estimator.h
   src/estimator/estimator.cpp

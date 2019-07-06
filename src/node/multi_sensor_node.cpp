@@ -24,7 +24,7 @@ queue<sensor_msgs::ImuConstPtr> imu_buf;
 queue<sensor_msgs::ImageConstPtr> img0_buf;
 queue<sensor_msgs::ImageConstPtr> img1_buf;
 std::mutex m_buf;
-bool STEREO = true;
+bool STEREO = false;
 
 /**
  * @brief front camera topic receive callback
@@ -36,6 +36,7 @@ void img0_callback(const sensor_msgs::ImageConstPtr &img_msg)
     m_buf.lock();
     img0_buf.push(img_msg);
     m_buf.unlock();
+    // estimator.inputImage(float time, cv::Mat image0,  cv::Mat image1)
 }
 
 /**
@@ -111,7 +112,7 @@ void dws_callback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
     float left_front_pulse_num = dws_msg->left_front;
     float right_front_pulse_num = dws_msg->right_front;  
     estimator.get_odom(left_rear_pulse_num, right_rear_pulse_num, t);
-    ROS_DEBUG("dws:%lf", t);
+    // ROS_DEBUG("dws:%lf", t);
 }
 
 /**
@@ -171,8 +172,8 @@ void sync_process()
                 img0_buf.pop();
             }
             m_buf.unlock();
-            // if(!image.empty())
-            //     estimator.inputImage(time, image);
+            if(!image.empty())
+                estimator.inputImage(time, image);
         }
 
         std::chrono::milliseconds dura(2);
@@ -211,9 +212,11 @@ int main(int argc, char **argv)
     // receive topic
     ROS_WARN("waiting for image, dws and imu...");
 
+    /// -> pws_callback -> estimator -> get_odom -> wheel_odometer_.calculate_odom -> T
+    /// -> img_callback -> sync_thread -> estimator -> inputImage -> featureTracker_.readImage -> KLT_points
     registerPub(n);
     ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback); //, ros::TransportHints().tcpNoDelay()
-    ros::Subscriber sub_dws = n.subscribe(DWS_TOPIC, 2000, dws_callback); 
+    // ros::Subscriber sub_dws = n.subscribe(DWS_TOPIC, 2000, dws_callback);  
     ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0_callback);
     ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1_callback);
 

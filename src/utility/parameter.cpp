@@ -4,12 +4,20 @@
 #include <opencv2/core/eigen.hpp>
  
 std::string IMU_TOPIC;
- 
-int NUM_OF_CAM;
- 
+int ROW, COL;
+int NUM_OF_CAM; 
+int MAX_CNT;
+int MIN_DIST;
+double F_THRESHOLD;
+int SHOW_TRACK;
+int FLOW_BACK;
+
 int USE_IMU;
- 
+int MULTIPLE_THREAD;
+
 std::string IMAGE0_TOPIC, IMAGE1_TOPIC;
+std::vector<std::string> CAM_NAMES;
+
 std::vector<Eigen::Matrix3d> RIC_Front;
 std::vector<Eigen::Vector3d> TIC_Front;
 std::vector<Eigen::Matrix3d> RIC_Rear;
@@ -45,6 +53,12 @@ void readParameters(std::string config_file)
     fsSettings["image0_topic"] >> IMAGE0_TOPIC;
     fsSettings["image1_topic"] >> IMAGE1_TOPIC;
 
+    MAX_CNT = fsSettings["max_cnt"];
+    MIN_DIST = fsSettings["min_dist"];
+    F_THRESHOLD = fsSettings["F_threshold"];
+    SHOW_TRACK = fsSettings["show_track"];
+    FLOW_BACK = fsSettings["flow_back"];
+
     fsSettings["dws_topic"] >> DWS_TOPIC;
 
     Front_Wheel_Radius = fsSettings["front_wheel_radius"];
@@ -68,6 +82,17 @@ void readParameters(std::string config_file)
     cv::cv2eigen(Tcv_2, T);
     RIC_Rear.push_back(T.block<3, 3>(0, 0));
     TIC_Rear.push_back(T.block<3, 1>(0, 3));
+
+    int pn = config_file.find_last_of('/');
+    std::string configPath = config_file.substr(0, pn);
+    
+    std::string cam0Calib;
+    fsSettings["cam_calib"] >> cam0Calib;
+    std::string cam0Path = configPath + "/" + cam0Calib;
+    std::cout << cam0Path << std::endl;
+    CAM_NAMES.push_back(cam0Path);
+
+
  
     fsSettings.release();
 }
