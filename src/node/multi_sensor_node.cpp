@@ -18,7 +18,7 @@
 
 using namespace Eigen;
 
-Estimator estimator;
+Estimator estimator; // 入口
 
 queue<sensor_msgs::ImuConstPtr> imu_buf; 
 queue<sensor_msgs::ImageConstPtr> img0_buf;
@@ -94,7 +94,7 @@ void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
     double rz = imu_msg->angular_velocity.z;
     Vector3d acc(dx, dy, dz);
     Vector3d gyr(rx, ry, rz); 
-    // ROS_DEBUG("imu:%lf", t);
+    ROS_DEBUG("imu:%lf", t);
     // return;
 }
 
@@ -111,7 +111,7 @@ void dws_callback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
     float left_front_pulse_num = dws_msg->left_front;
     float right_front_pulse_num = dws_msg->right_front;  
     estimator.get_odom(left_rear_pulse_num, right_rear_pulse_num, t);
-    // ROS_DEBUG("dws:%lf", t);
+    ROS_DEBUG("dws:%lf", t);
 }
 
 /**
@@ -155,7 +155,7 @@ void sync_process()
             }
             m_buf.unlock();
             if(!image0.empty())
-                estimator.inputImage(time, image0, image1);
+                estimator.inputImage(time, image0, image1); // 进入到图像入口
         }
         else
         {
