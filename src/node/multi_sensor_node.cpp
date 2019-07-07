@@ -31,7 +31,7 @@ bool STEREO = false;
  * 
  * @param img_msg 
  */
-void img0_callback(const sensor_msgs::ImageConstPtr &img_msg)
+void img0Callback(const sensor_msgs::ImageConstPtr &img_msg)
 {
     m_buf.lock();
     img0_buf.push(img_msg);
@@ -44,7 +44,7 @@ void img0_callback(const sensor_msgs::ImageConstPtr &img_msg)
  * 
  * @param img_msg 
  */
-void img1_callback(const sensor_msgs::ImageConstPtr &img_msg)
+void img1Callback(const sensor_msgs::ImageConstPtr &img_msg)
 {
     m_buf.lock();
     img1_buf.push(img_msg);
@@ -84,7 +84,7 @@ cv::Mat getImageFromMsg(const sensor_msgs::ImageConstPtr &img_msg)
  * 
  * @param imu_msg 
  */
-void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
+void imuCallback(const sensor_msgs::ImuConstPtr &imu_msg)
 {
     double t = imu_msg->header.stamp.toSec();
     double dx = imu_msg->linear_acceleration.x;
@@ -104,14 +104,14 @@ void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
  * 
  * @param dws_msg 
  */
-void dws_callback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
+void dwsCallback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
 {
     double t = dws_msg->header.stamp.toSec();
     float left_rear_pulse_num = dws_msg->left_rear; 
     float right_rear_pulse_num = dws_msg->right_rear;
     float left_front_pulse_num = dws_msg->left_front;
     float right_front_pulse_num = dws_msg->right_front;  
-    estimator.get_odom(left_rear_pulse_num, right_rear_pulse_num, t);
+    estimator.getOdom(left_rear_pulse_num, right_rear_pulse_num, t);
     // ROS_DEBUG("dws:%lf", t);
 }
 
@@ -119,7 +119,7 @@ void dws_callback(const multi_sensor_slam::dws_infoConstPtr &dws_msg)
  * @brief extract images with same timestamp from two topics
  * 
  */
-void sync_process()
+void syncProcess()
 {
     while(1)
     {
@@ -215,13 +215,13 @@ int main(int argc, char **argv)
     /// -> pws_callback -> estimator -> get_odom -> wheel_odometer_.calculate_odom -> T
     /// -> img_callback -> sync_thread -> estimator -> inputImage -> featureTracker_.readImage -> KLT_points
     registerPub(n);
-    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback); //, ros::TransportHints().tcpNoDelay()
-    // ros::Subscriber sub_dws = n.subscribe(DWS_TOPIC, 2000, dws_callback);  
-    ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0_callback);
-    ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1_callback);
+    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imuCallback); //, ros::TransportHints().tcpNoDelay()
+    // ros::Subscriber sub_dws = n.subscribe(DWS_TOPIC, 2000, dwsCallback);  
+    ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0Callback);
+    ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1Callback);
 
     // start a new thread
-    std::thread sync_thread{sync_process};
+    std::thread sync_thread{syncProcess};
     
     ros::spin();
 

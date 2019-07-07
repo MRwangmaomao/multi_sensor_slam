@@ -23,18 +23,18 @@ public:
 	Estimator();
 	virtual ~Estimator(); 
 	void setParameter();
-	void get_odom(float left_rear_wheel_num, float right_rear_pulses_num, double current_time);
+	void getOdom(float left_rear_wheel_num, float right_rear_pulses_num, double current_time);
 	void inputImage(double time, const cv::Mat &_img, const cv::Mat &_img1 = cv::Mat());
-    FeatureTracker featureTracker;
+    
 
+	FeatureTracker feature_tracker_;
+	int frame_count_;
+	int sum_of_outlier_, sum_of_back_, sum_of_front_, sum_of_invalid_;
+	int input_imageCnt_;
 
-	int frame_count;
-	int sum_of_outlier, sum_of_back, sum_of_front, sum_of_invalid;
-	int inputImageCnt;
-
-	std::mutex mProcess;
-    std::mutex mBuf;
-	queue<pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > featureBuf;
+	std::mutex mProcess_;
+    std::mutex mBuf_;
+	queue<pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > featureBuf_;
 	
 	WheelOdometer wheel_odometer_;
 };

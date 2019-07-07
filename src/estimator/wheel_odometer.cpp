@@ -5,7 +5,7 @@ WheelOdometer::WheelOdometer()
 { 
     last_left_rear_pulses_num_ = 0;
     last_right_rear_pulses_num_ = 0;
-    yaw = 0.0;
+    yaw_ = 0.0;
 }
 
 WheelOdometer::~WheelOdometer()
@@ -38,7 +38,7 @@ void WheelOdometer::setWheelParam(double rear_wheel_radius, double wheel_base, d
  * @param left_rear_wheel_num 
  * @param right_rear_pulses_num 
  */
-void WheelOdometer::calculate_odom(float left_rear_wheel_num, float right_rear_pulses_num, double current_time)
+void WheelOdometer::calculateOdom(float left_rear_wheel_num, float right_rear_pulses_num, double current_time)
 {
     float increase_left = 0;
     float increase_right = 0;
@@ -50,9 +50,9 @@ void WheelOdometer::calculate_odom(float left_rear_wheel_num, float right_rear_p
         float dt = current_time - last_time_;
         float dx = (increase_left + increase_right)/2;
         double dtheta = (increase_right -increase_left) / rear_track_;
-        yaw += dtheta;
-        T(0) += dx * cos(yaw); 
-        T(1) += dx * sin(yaw);
+        yaw_ += dtheta;
+        T_(0) += dx * cos(yaw_); 
+        T_(1) += dx * sin(yaw_);
         // std::cout << T << std::endl;
     } 
     last_time_ = current_time;
